@@ -30,3 +30,6 @@ K = Exponential smoothing constant
 *  If the MACD crosses above its signal line following a brief correction within a longer-term uptrend, it qualifies as **bullish** confirmation.
 *  If the MACD crosses below its signal line following a brief move higher within a longer-term downtrend, traders would consider that a **bearish** confirmation.
 *  MACD is best used with daily periods, where the traditional settings of 26/12/9 days is the norm.
+
+Deployed app for analysing 5 major companies using streamlit-
+link - https://kiki-lstm-stock-prediction.streamlit.app/
