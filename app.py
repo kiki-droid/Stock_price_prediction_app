@@ -1,22 +1,22 @@
 # Raw Package
+import math
+from datetime import date
+
 import numpy as np
 import pandas as pd
+import plotly.express as px
 # Graphing/Visualization
 import plotly.graph_objs as go
+import streamlit as st
 # Market Data
 import yfinance as yf
-from Tools.scripts.dutree import display
-from ta.trend import MACD
+from keras.layers import LSTM, Dense
+from keras.models import Sequential
+from sklearn.metrics import mean_squared_error
 # import modules
 from sklearn.preprocessing import MinMaxScaler
-from sklearn.metrics import mean_squared_error
-from keras.models import Sequential
-from keras.layers import LSTM, Dense
-import math
-from datetime import date, datetime
-import plotly.express as px
-import streamlit as st
 from streamlit_option_menu import option_menu
+from ta.trend import MACD
 
 # Override Yahoo Finance 
 yf.pdr_override()
