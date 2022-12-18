@@ -10,6 +10,7 @@ import plotly.graph_objs as go
 import streamlit as st
 # Market Data
 import yfinance as yf
+from tensorflow import keras
 from keras.layers import LSTM, Dense
 from keras.models import Sequential
 from sklearn.metrics import mean_squared_error
