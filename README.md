@@ -1,1 +1,2 @@
-# Stock_price_prediction_app
+# Stock price prediction app with lstm
+
