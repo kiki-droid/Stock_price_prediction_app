@@ -7,5 +7,4 @@ streamlit==1.15.2
 streamlit_option_menu==0.3.2
 ta==0.10.2
 tensorflow==2.11.0
-tensorflow_intel==2.11.0
 yfinance==0.1.87
