@@ -1,6 +1,6 @@
 # Stock price prediction app with lstm
 
-* In this project, machine learning model LSTM or Long Short Term Memory is used for making predictions.Long short-term memory (LSTM) belongs to the complex areas of Deep Learning and is stUdied to give best predictions in time series models in machine learning.
+* In this project, machine learning model LSTM or Long Short Term Memory is used for making predictions.Long short-term memory (LSTM) belongs to the complex areas of Deep Learning and is studied to give best predictions in time series models in machine learning.
 
 * Average price of a stock for the next whole day is calculated using averages prices from previous dates fed in the model. Here, average price for the day is calculated by taking into consideration **OHLC i.e., Open, High, Low and Close** prices for that day. 
 
