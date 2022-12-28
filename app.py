@@ -1,6 +1,6 @@
 # Raw Package
 import math
-from datetime import date
+from datetime import date, timedelta
 
 import numpy as np
 import pandas as pd
@@ -54,13 +54,13 @@ if stock == "TSLA":
 # Retrieve stock data frame (df) from yfinance API at an interval of 1m 
 df = yf.download(tickers=stock, period='4y', interval='1d')
 
-end = date.today()
+end = date.today().isoformat()
 
-start = date(end.year, end.month - 1, end.day)
+start = (date.today()-timedelta(days=30)).isoformat()
 
-new = date(end.year, end.month, end.day + 1)
+new = (date.today()+timedelta(days=1)).isoformat()  
 
-last = date(end.year, end.month, end.day + 10)
+last = (date.today()+timedelta(days=15)).isoformat()  
 
 st.subheader("Stock information")
 d = str(date(end.year - 4, end.month, end.day))
