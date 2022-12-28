@@ -63,7 +63,7 @@ new = (date.today()+timedelta(days=1)).isoformat()
 last = (date.today()+timedelta(days=15)).isoformat()  
 
 st.subheader("Stock information")
-d = str(date(end.year - 4, end.month, end.day))
+d = str(date(date.today().year - 4, date.today().month, date.today().day))
 st.write('Stock Data till today from ', d)
 st.write(df)
 
