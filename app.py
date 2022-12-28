@@ -295,7 +295,7 @@ ext_col = df["Date"]
 data.insert(0, "Date", ext_col)
 data.drop(['Close', 'Open', 'High', 'Low'], axis=1, inplace=True)
 
-mask = (train_dates > start)
+mask = (train_dates > (date.today()-timedelta(days=30)))
 data1 = data.loc[mask]
 data1.reset_index()
 
