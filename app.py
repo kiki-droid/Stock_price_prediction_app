@@ -31,6 +31,8 @@ hide_st_style = """
             """
 st.markdown(hide_st_style, unsafe_allow_html=True)
 
+px.defaults.width = 1000
+
 with st.sidebar:
     stock = option_menu(
         menu_title="Stock market analysis and prediction",
