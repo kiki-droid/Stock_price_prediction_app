@@ -302,7 +302,7 @@ frames = [data1, dff]
 result = pd.concat(frames)
 
 # plotting the line chart
-figx = px.scatter(result, x="Date", y1="Average price (actual)", y2="Average price predicted for the next 30 days with 100 days windows period")
+figx = px.line(result, x="Date", y1="Average price (actual)", y2="Average price predicted for the next 30 days with 100 days windows period")
 figx.update_yaxes(title_text="Price (in $)")
 # showing the plot
 st.plotly_chart(figx)
