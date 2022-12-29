@@ -307,4 +307,4 @@ figx = px.scatter(result, x="Date", y=["Average price (actual)",
                                        "30 days with 100 days window period"])
 figx.update_yaxes(title_text="Price (in $)")
 # showing the plot
-st.plotly_chart(figx)
+st.plotly_chart(figx, width= 1000)
