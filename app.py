@@ -52,7 +52,7 @@ if stock == "TSLA":
     st.subheader('  **TESLA Stocks**')
 
 # Retrieve stock data frame (df) from yfinance API at an interval of 1m 
-df = yf.download(tickers=stock, period='4y', interval='1d')
+df = yf.download(tickers=stock, period='8y', interval='1d')
 
 end = date.today()
 
