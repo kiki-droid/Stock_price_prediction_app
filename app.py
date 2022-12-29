@@ -282,7 +282,7 @@ y_future_S = scaler.inverse_transform(y_future)
 dff = pd.DataFrame(
     columns=['Date', 'Average price predicted for the next 30 days with 100 days window period'])
 dff['Date'] = pd.date_range(date.today() + pd.Timedelta(days=1), periods=n_future)
-dff['Average price predicted for the next 10 days'] = y_future_S.flatten()
+dff['Average price predicted for the next 30 days with 100 days window period'] = y_future_S.flatten()
 dff.reset_index()
 st.write(dff)
 
