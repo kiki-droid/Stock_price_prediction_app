@@ -18,6 +18,14 @@ from sklearn.preprocessing import MinMaxScaler
 from streamlit_option_menu import option_menu
 from ta.trend import MACD
 
+# Load the model (only executed once!)
+# NOTE: Don't set ttl or max_entries in this case
+@st.cache
+def load_model():
+	  return torch.load("path/to/model.pt")
+
+model = load_model() 
+
 # Override Yahoo Finance 
 yf.pdr_override()
 
