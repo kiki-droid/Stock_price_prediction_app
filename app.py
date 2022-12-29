@@ -19,14 +19,6 @@ from sklearn.preprocessing import MinMaxScaler
 from streamlit_option_menu import option_menu
 from ta.trend import MACD
 
-# Load the model (only executed once!)
-# NOTE: Don't set ttl or max_entries in this case
-@st.cache
-def load_model():
-	  return torch.load("path/to/model.pt")
-
-model = load_model() 
-
 # Override Yahoo Finance 
 yf.pdr_override()
 
@@ -60,7 +52,7 @@ if stock == "TSLA":
     st.subheader('  **TESLA Stocks**')
 
 # Retrieve stock data frame (df) from yfinance API at an interval of 1m 
-df = yf.download(tickers=stock, period='8y', interval='1d')
+df = yf.download(tickers=stock, period='4y', interval='1d')
 
 end = date.today()
 
@@ -71,7 +63,7 @@ new = (date.today()+timedelta(days=1))
 last = (date.today()+timedelta(days=30))  
 
 st.subheader("Stock information")
-d = str(date(date.today().year - 8, date.today().month, date.today().day))
+d = str(date(date.today().year - 4, date.today().month, date.today().day))
 st.write('Stock Data till today from ', d)
 st.write(df)
 
