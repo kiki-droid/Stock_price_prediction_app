@@ -302,7 +302,7 @@ frames = [data1, dff]
 result = pd.concat(frames)
 
 # plotting the line chart
-figx = px.line(result, x="Date", y=df.columns[1:,:]")
+figx = px.line(result, x="Date", y=df.columns[1:]")
 figx.update_yaxes(title_text="Price (in $)")
 # showing the plot
 st.plotly_chart(figx)
