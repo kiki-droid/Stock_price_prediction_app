@@ -52,18 +52,18 @@ if stock == "TSLA":
     st.subheader('  **TESLA Stocks**')
 
 # Retrieve stock data frame (df) from yfinance API at an interval of 1m 
-df = yf.download(tickers=stock, period='4y', interval='1d')
+df = yf.download(tickers=stock, period='8y', interval='1d')
 
-end = date.today().isoformat()
+end = date.today()
 
-start = (date.today()-timedelta(days=30)).isoformat()
+start = (date.today()-timedelta(days=30))
 
-new = (date.today()+timedelta(days=1)).isoformat()  
+new = (date.today()+timedelta(days=1))
 
-last = (date.today()+timedelta(days=10)).isoformat()  
+last = (date.today()+timedelta(days=30))  
 
 st.subheader("Stock information")
-d = str(date(date.today().year - 4, date.today().month, date.today().day))
+d = str(date(date.today().year - 8, date.today().month, date.today().day))
 st.write('Stock Data till today from ', d)
 st.write(df)
 
@@ -198,10 +198,10 @@ with tab3:
 st.subheader("Stock average price prediction using LSTM for next 10 days "
              "from today")
 st.caption("The LSTM used here is a stacked univariate LSTM.\n"
-         "The data from 4 years till today is splited into train and test "
+         "The data from 8 years till today is splited into train and test "
          "with 80:20 ratio where, the most previous dates are used for "
          "training and the nearer dates are used for testing and predicting.\n"
-         "The average price of last 15 days is used as a window period for "
+         "The average price of last 100 days is used as a window period for "
          "training,  testing and predicting the 16th day's average price."
          "Root mean squared error (RMSE) is the square root of the mean of "
          "the square of all of the error. Based on a rule of thumb, it can "
@@ -225,6 +225,7 @@ train_d = int(len(df4) * 0.8)
 test_d = len(df4) - train_d
 train_d, test_d = df4[0:train_d, :], df4[train_d:len(df4), :]
 
+random.seed(9)
 
 def new_dataset(dataset, step_size):
     data_X, data_Y = [], []
@@ -234,8 +235,7 @@ def new_dataset(dataset, step_size):
         data_Y.append(dataset[i + step_size, 0])
     return np.array(data_X), np.array(data_Y)
 
-
-step_size = 15
+step_size = 100
 X_train, Y_train = new_dataset(train_d, step_size)
 X_test, Y_test = new_dataset(test_d, step_size)
 
@@ -263,7 +263,7 @@ trainY = scaler.inverse_transform([Y_train])
 testPredictY = scaler.inverse_transform(testPredict)
 testY = scaler.inverse_transform([Y_test])
 
-n_future = 10
+n_future = 30
 y_future = []
 
 x_pred = X_test[-1:, :]  # last observed input sequence
@@ -283,7 +283,7 @@ y_future = np.array(y_future).reshape(-1, 1)
 y_future_S = scaler.inverse_transform(y_future)
 
 dff = pd.DataFrame(
-    columns=['Date', 'Average price predicted for the next 10 days'])
+    columns=['Date', 'Average price predicted for the next 30 days with 100 days window period'])
 dff['Date'] = pd.date_range(date.today() + pd.Timedelta(days=1), periods=n_future)
 dff['Average price predicted for the next 10 days'] = y_future_S.flatten()
 dff.reset_index()
@@ -304,9 +304,10 @@ frames = [data1, dff]
 result = pd.concat(frames)
 
 # plotting the line chart
-figx = px.scatter(result, x="Date", y=["Average price (actual)",
-                                       "Average price predicted for the next "
-                                       "10 days"])
-figx.update_yaxes(title_text="Price")
+figx = px.line(result, x="Date", y=["Average price (actual)"])
+figx.add_trace(go.Scatter(x=result1["Date"], y=result1["Average price predicted for the next 30 days with 100 days windows period"],
+                    mode='lines',
+                    name='Average price predicted for the next 30 days with 100 days windows period'))
+figx.update_yaxes(title_text="Price (in $)")
 # showing the plot
 st.plotly_chart(figx)
