@@ -1,7 +1,6 @@
 # Raw Package
 import math
 from datetime import date, timedelta
-import random
 import numpy as np
 import pandas as pd
 import plotly.express as px
@@ -224,8 +223,6 @@ df4 = scaler.fit_transform(df3)
 train_d = int(len(df4) * 0.8)
 test_d = len(df4) - train_d
 train_d, test_d = df4[0:train_d, :], df4[train_d:len(df4), :]
-
-random.seed(9)
 
 def new_dataset(dataset, step_size):
     data_X, data_Y = [], []
