@@ -197,14 +197,14 @@ with tab2:
 with tab3:
     st.plotly_chart(fig2, use_container_width=True)
 
-st.subheader("Stock average price prediction using LSTM for next 10 days "
+st.subheader("Stock average price prediction using LSTM for next 30 days "
              "from today")
 st.caption("The LSTM used here is a stacked univariate LSTM.\n"
-         "The data from 8 years till today is splited into train and test "
+         "The data from 4 years till today is splited into train and test "
          "with 80:20 ratio where, the most previous dates are used for "
          "training and the nearer dates are used for testing and predicting.\n"
          "The average price of last 100 days is used as a window period for "
-         "training,  testing and predicting the 16th day's average price."
+         "training,  testing and predicting the next day's average price."
          "Root mean squared error (RMSE) is the square root of the mean of "
          "the square of all of the error. Based on a rule of thumb, it can "
          "be said that RMSE values between 0.2 and 0.5 shows that the model "
