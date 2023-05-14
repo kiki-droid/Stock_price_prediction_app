@@ -8,3 +8,4 @@ streamlit_option_menu==0.3.2
 ta==0.10.2
 tensorflow==2.11.0
 yfinance==0.1.87
+altair==4.0
