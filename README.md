@@ -32,4 +32,4 @@ K = Exponential smoothing constant
 *  MACD is best used with daily periods, where the traditional settings of 26/12/9 days is the norm.
 
 Deployed app for analysing 5 major companies using streamlit-
-link - https://kiki-lstm-stock-prediction.streamlit.app/
+link - https://stocks-price-prediction.streamlit.app/
