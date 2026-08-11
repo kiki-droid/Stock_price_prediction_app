@@ -95,6 +95,10 @@ df = yf.download(
     auto_adjust=False
 )
 
+# Keep only the most recent 4 years of data
+four_years_ago = pd.Timestamp(date.today() - timedelta(days=4 * 365))
+
+df = df[df.index >= four_years_ago]
 
 # ============================================================
 # FIX YFINANCE MULTIINDEX
