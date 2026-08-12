@@ -6,5 +6,5 @@ numpy
 scikit-learn
 ta
 streamlit-option-menu
-tensorflow
-keras
+tensorflow==2.16.1
+keras==3.0.5
