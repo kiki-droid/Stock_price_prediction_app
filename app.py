@@ -14,9 +14,9 @@ import plotly
 import streamlit as st
 import yfinance as yf
 
-from tensorflow import keras
-from keras.layers import LSTM, Dense
-from keras.models import Sequential
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense, Input
+from tensorflow.keras import backend as K
 
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
@@ -740,24 +740,26 @@ X_test = X_test.reshape(
 # LSTM MODEL
 # ============================================================
 
+K.clear_session()
+
 model = Sequential()
 
+model.add(
+    Input(shape=(step_size, 1))
+)
 
 model.add(
     LSTM(
         units=50,
-        return_sequences=True,
-        input_shape=(step_size, 1)
+        return_sequences=True
     )
 )
-
 
 model.add(
     LSTM(
         units=50
     )
 )
-
 
 model.add(
     Dense(1)
