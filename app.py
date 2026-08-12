@@ -9,7 +9,6 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-import plotly
 
 import streamlit as st
 import yfinance as yf
@@ -44,7 +43,10 @@ hide_st_style = """
             </style>
             """
 
-st.markdown(hide_st_style, unsafe_allow_html=True)
+st.markdown(
+    hide_st_style,
+    unsafe_allow_html=True
+)
 
 px.defaults.width = 1000
 
@@ -57,8 +59,20 @@ with st.sidebar:
 
     stock = option_menu(
         menu_title="Stock market analysis and prediction",
-        options=["GOOGL", "AAPL", "AMZN", "MSFT", "TSLA"],
-        icons=["google", "apple", "check-square", "microsoft", "robot"],
+        options=[
+            "GOOGL",
+            "AAPL",
+            "AMZN",
+            "MSFT",
+            "TSLA"
+        ],
+        icons=[
+            "google",
+            "apple",
+            "check-square",
+            "microsoft",
+            "robot"
+        ],
         menu_icon="bar-chart-fill",
         default_index=0,
     )
@@ -95,30 +109,66 @@ df = yf.download(
     auto_adjust=False
 )
 
-# Keep only the most recent 4 years of data
-four_years_ago = pd.Timestamp(date.today() - timedelta(days=4 * 365))
 
-df = df[df.index >= four_years_ago]
+# ============================================================
+# KEEP ONLY THE MOST RECENT 4 YEARS
+# ============================================================
+
+four_years_ago = pd.Timestamp(
+    date.today().replace(
+        year=date.today().year - 4
+    )
+)
+
+df = df[
+    df.index >= four_years_ago
+]
+
 
 # ============================================================
 # FIX YFINANCE MULTIINDEX
 # ============================================================
 
-if isinstance(df.columns, pd.MultiIndex):
-    df.columns = df.columns.get_level_values(0)
+if isinstance(
+    df.columns,
+    pd.MultiIndex
+):
+
+    df.columns = (
+        df.columns
+        .get_level_values(0)
+    )
 
 
 # Make sure OHLCV columns are 1-dimensional
-for col in ["Open", "High", "Low", "Close", "Volume"]:
+for col in [
+    "Open",
+    "High",
+    "Low",
+    "Close",
+    "Volume"
+]:
 
-    if isinstance(df[col], pd.DataFrame):
-        df[col] = df[col].iloc[:, 0]
+    if isinstance(
+        df[col],
+        pd.DataFrame
+    ):
+
+        df[col] = (
+            df[col]
+            .iloc[:, 0]
+        )
 
 
-# Check whether data was downloaded
+# ============================================================
+# CHECK WHETHER DATA WAS DOWNLOADED
+# ============================================================
+
 if df.empty:
 
-    st.error(f"No data found for {stock}")
+    st.error(
+        f"No data found for {stock}"
+    )
 
     st.stop()
 
@@ -129,28 +179,35 @@ if df.empty:
 
 end = date.today()
 
-start = date.today() - timedelta(days=30)
+start = date.today() - timedelta(
+    days=30
+)
 
-new = date.today() + timedelta(days=1)
+new = date.today() + timedelta(
+    days=1
+)
 
-last = date.today() + timedelta(days=30)
+last = date.today() + timedelta(
+    days=30
+)
 
 
 # ============================================================
 # STOCK INFORMATION
 # ============================================================
 
-st.subheader("Stock information")
-
-d = str(
-    date(
-        date.today().year - 4,
-        date.today().month,
-        date.today().day
-    )
+st.subheader(
+    "Stock information"
 )
 
-st.write("Stock Data till today from", d)
+d = str(
+    four_years_ago.date()
+)
+
+st.write(
+    "Stock Data till today from",
+    d
+)
 
 st.write(df)
 
@@ -313,7 +370,9 @@ fig.update_xaxes(
                 stepmode="backward"
             ),
 
-            dict(step="all")
+            dict(
+                step="all"
+            )
 
         ])
     )
@@ -540,7 +599,9 @@ fig2.update_xaxes(
 # GRAPHICAL ANALYSIS
 # ============================================================
 
-st.subheader("Graphical Analysis")
+st.subheader(
+    "Graphical Analysis"
+)
 
 
 tab1, tab2, tab3 = st.tabs(
@@ -627,11 +688,13 @@ df1 = df[
 ].copy()
 
 
-df2 = df1.mean(axis=1)
+df2 = df1.mean(
+    axis=1
+)
 
 
 # ============================================================
-# SCALE DATA
+# PREPARE DATA
 # ============================================================
 
 df3 = np.reshape(
@@ -640,28 +703,47 @@ df3 = np.reshape(
 )
 
 
-scaler = MinMaxScaler(
-    (0, 1)
-)
-
-
-df4 = scaler.fit_transform(df3)
-
-
 # ============================================================
 # TRAIN / TEST SPLIT
 # ============================================================
 
 train_d = int(
-    len(df4) * 0.8
+    len(df3) * 0.8
 )
 
-test_d = len(df4) - train_d
+test_d = len(df3) - train_d
 
 
-train_d, test_d = (
-    df4[0:train_d, :],
-    df4[train_d:len(df4), :]
+# Split RAW data first
+train_raw = df3[
+    0:train_d,
+    :
+]
+
+test_raw = df3[
+    train_d:len(df3),
+    :
+]
+
+
+# ============================================================
+# SCALE DATA
+# ============================================================
+
+scaler = MinMaxScaler(
+    (0, 1)
+)
+
+
+# Fit scaler ONLY on training data
+train_scaled = scaler.fit_transform(
+    train_raw
+)
+
+
+# Transform test data using training scaler
+test_scaled = scaler.transform(
+    test_raw
 )
 
 
@@ -669,14 +751,17 @@ train_d, test_d = (
 # CREATE DATASET
 # ============================================================
 
-def new_dataset(dataset, step_size):
+def new_dataset(
+    dataset,
+    step_size
+):
 
     data_X = []
 
     data_Y = []
 
     for i in range(
-        len(dataset) - step_size - 1
+        len(dataset) - step_size
     ):
 
         a = dataset[
@@ -707,13 +792,26 @@ step_size = 100
 
 
 X_train, Y_train = new_dataset(
-    train_d,
+    train_scaled,
     step_size
 )
 
 
+# ============================================================
+# TEST DATA WITH TRAINING CONTEXT
+# ============================================================
+
+test_input = np.concatenate(
+    [
+        train_scaled[-step_size:],
+        test_scaled
+    ],
+    axis=0
+)
+
+
 X_test, Y_test = new_dataset(
-    test_d,
+    test_input,
     step_size
 )
 
@@ -742,11 +840,19 @@ X_test = X_test.reshape(
 
 K.clear_session()
 
+
 model = Sequential()
 
+
 model.add(
-    Input(shape=(step_size, 1))
+    Input(
+        shape=(
+            step_size,
+            1
+        )
+    )
 )
+
 
 model.add(
     LSTM(
@@ -755,11 +861,13 @@ model.add(
     )
 )
 
+
 model.add(
     LSTM(
         units=50
     )
 )
+
 
 model.add(
     Dense(1)
@@ -803,38 +911,6 @@ testPredict = model.predict(
 
 
 # ============================================================
-# RMSE
-# ============================================================
-
-trainScore = math.sqrt(
-    mean_squared_error(
-        Y_train,
-        trainPredict
-    )
-)
-
-
-st.write(
-    "LSTM Train RMSE: %.2f"
-    % trainScore
-)
-
-
-testScore = math.sqrt(
-    mean_squared_error(
-        Y_test,
-        testPredict
-    )
-)
-
-
-st.write(
-    "LSTM Test RMSE: %.2f"
-    % testScore
-)
-
-
-# ============================================================
 # INVERSE TRANSFORM
 # ============================================================
 
@@ -844,7 +920,10 @@ trainPredictY = scaler.inverse_transform(
 
 
 trainY = scaler.inverse_transform(
-    [Y_train]
+    Y_train.reshape(
+        -1,
+        1
+    )
 )
 
 
@@ -854,7 +933,42 @@ testPredictY = scaler.inverse_transform(
 
 
 testY = scaler.inverse_transform(
-    [Y_test]
+    Y_test.reshape(
+        -1,
+        1
+    )
+)
+
+
+# ============================================================
+# RMSE
+# ============================================================
+
+trainScore = math.sqrt(
+    mean_squared_error(
+        trainY,
+        trainPredictY
+    )
+)
+
+
+st.write(
+    "LSTM Train RMSE: $%.2f"
+    % trainScore
+)
+
+
+testScore = math.sqrt(
+    mean_squared_error(
+        testY,
+        testPredictY
+    )
+)
+
+
+st.write(
+    "LSTM Test RMSE: $%.2f"
+    % testScore
 )
 
 
@@ -866,10 +980,18 @@ n_future = 30
 
 y_future = []
 
-# Last 100-day window
-x_pred = X_test[-1:, :, :].copy()
 
-for i in range(n_future):
+# Last 100-day window
+x_pred = X_test[
+    -1:,
+    :,
+    :
+].copy()
+
+
+for i in range(
+    n_future
+):
 
     # Predict next value
     y_pred = model.predict(
@@ -877,31 +999,47 @@ for i in range(n_future):
         verbose=0
     )
 
-    # y_pred shape: (1, 1)
-    # Convert to: (1, 1, 1)
-    y_pred_3d = y_pred.reshape(1, 1, 1)
 
-    # Remove oldest value and append the new prediction
+    # Convert prediction from
+    # (1, 1) to (1, 1, 1)
+    y_pred_3d = y_pred.reshape(
+        1,
+        1,
+        1
+    )
+
+
+    # Remove oldest value
+    # and append new prediction
     x_pred = np.concatenate(
         [
-            x_pred[:, 1:, :],
+            x_pred[
+                :,
+                1:,
+                :
+            ],
             y_pred_3d
         ],
         axis=1
     )
 
+
     # Store prediction
     y_future.append(
         y_pred.flatten()[0]
     )
-    
+
+
 # ============================================================
 # INVERSE SCALE FUTURE PREDICTIONS
 # ============================================================
 
 y_future = np.array(
     y_future
-).reshape(-1, 1)
+).reshape(
+    -1,
+    1
+)
 
 
 y_future_S = scaler.inverse_transform(
@@ -921,8 +1059,9 @@ dff = pd.DataFrame(
 )
 
 
-dff["Date"] = pd.date_range(
-    date.today() + pd.Timedelta(days=1),
+# Business days instead of calendar days
+dff["Date"] = pd.bdate_range(
+    start=date.today() + pd.Timedelta(days=1),
     periods=n_future
 )
 
@@ -932,7 +1071,9 @@ dff[
 ] = y_future_S.flatten()
 
 
-st.write(dff)
+st.write(
+    dff
+)
 
 
 # ============================================================
@@ -942,13 +1083,17 @@ st.write(dff)
 data = df1.copy()
 
 
-data["Average price (actual)"] = data.mean(
+data[
+    "Average price (actual)"
+] = data.mean(
     numeric_only=True,
     axis=1
 )
 
 
-ext_col = df["Date"]
+ext_col = df[
+    "Date"
+]
 
 
 data.insert(
@@ -983,7 +1128,9 @@ mask = (
 )
 
 
-data1 = data.loc[mask].copy()
+data1 = data.loc[
+    mask
+].copy()
 
 
 # ============================================================
