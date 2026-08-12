@@ -10,7 +10,7 @@
 
 * Root mean squared error (RMSE) is the square root of the mean of the square of all of the error. Based on a rule of thumb, it can be said that RMSE values between 0.2 and 0.5 shows that the model can relatively predict the data accurately. RMSE of training and testing data both is calculted to see model's quality.
 
-* The data from 8 years before the date of running the application is analysed and presented. For extraction of data, yfinance library of python is used which can be installed using-
+* The data from 4 years before the date of running the application is analysed and presented. For extraction of data, yfinance library of python is used which can be installed using-
 **pip install yfinance** 
 
 * Prices for various cryptocurrencies in addition to company stocks can be analysed in the .ipynb notebook provided you know the ticker symbol.
