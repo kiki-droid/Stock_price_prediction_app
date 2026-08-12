@@ -866,23 +866,23 @@ n_future = 30
 
 y_future = []
 
+x_pred = X_test[-1:, :, :]
 
-x_pred = X_test[-1:, :]
-
-
-y_pred = testPredict[-1]
-
+y_pred = testPredict[-1:].reshape(1, 1, 1)
 
 for i in range(n_future):
 
-    x_pred = np.append(
-        x_pred[:, 1:],
-        y_pred.reshape(1, 1),
+    x_pred = np.concatenate(
+        [
+            x_pred[:, 1:, :],
+            y_pred
+        ],
         axis=1
     )
 
     y_pred = model.predict(
-        x_pred
+        x_pred,
+        verbose=0
     )
 
     y_future.append(
