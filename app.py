@@ -866,30 +866,35 @@ n_future = 30
 
 y_future = []
 
-x_pred = X_test[-1:, :, :]
-
-y_pred = testPredict[-1:].reshape(1, 1, 1)
+# Last 100-day window
+x_pred = X_test[-1:, :, :].copy()
 
 for i in range(n_future):
 
-    x_pred = np.concatenate(
-        [
-            x_pred[:, 1:, :],
-            y_pred
-        ],
-        axis=1
-    )
-
+    # Predict next value
     y_pred = model.predict(
         x_pred,
         verbose=0
     )
 
+    # y_pred shape: (1, 1)
+    # Convert to: (1, 1, 1)
+    y_pred_3d = y_pred.reshape(1, 1, 1)
+
+    # Remove oldest value and append the new prediction
+    x_pred = np.concatenate(
+        [
+            x_pred[:, 1:, :],
+            y_pred_3d
+        ],
+        axis=1
+    )
+
+    # Store prediction
     y_future.append(
         y_pred.flatten()[0]
     )
-
-
+    
 # ============================================================
 # INVERSE SCALE FUTURE PREDICTIONS
 # ============================================================
